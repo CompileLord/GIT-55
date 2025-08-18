@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Learning Tracker Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Боковая панель навигации -->
+    <nav class="sidebar">
+      <div class="logo">
+        <i class="fas fa-language"></i>
+        <span>English Pro</span>
+      </div>
+      <ul class="nav-links">
+        <li class="active" data-section="dashboard">
+          <i class="fas fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </li>
+        <li data-section="vocabulary">
+          <i class="fas fa-book-open"></i>
+          <span>Vocabulary</span>
+        </li>
+        <li data-section="practice">
+          <i class="fas fa-calendar-check"></i>
+          <span>Practice Calendar</span>
+        </li>
+        <li data-section="notes">
+          <i class="fas fa-sticky-note"></i>
+          <span>Creative Notes</span>
+        </li>
+        <li data-section="grammar">
+          <i class="fas fa-spell-check"></i>
+          <span>Grammar Practice</span>
+        </li>
+        <li data-section="ai-tools">
+          <i class="fas fa-robot"></i>
+          <span>AI Tools</span>
+        </li>
+        <li data-section="settings">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </li>
+      </ul>
+      <div class="theme-switcher">
+        <i class="fas fa-moon"></i>
+        <label class="switch">
+          <input type="checkbox" id="themeToggle">
+          <span class="slider round"></span>
+        </label>
+        <i class="fas fa-sun"></i>
+      </div>
+    </nav>
+
+    <!-- Основное содержимое -->
+    <main class="content">
+      <!-- Dashboard Section -->
+      <section id="dashboard" class="section active">
+        <div class="section-header">
+          <h1><i class="fas fa-chart-pie"></i> Learning Dashboard</h1>
+          <div class="header-actions">
+            <button id="addWordBtnDashboard" class="action-btn">
+              <i class="fas fa-plus"></i> Add Word
+            </button>
+          </div>
+        </div>
+
+        <div class="stats-container">
+          <!-- Статистика будет добавлена через JS -->
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-card full-width">
+            <div class="chart-header-with-controls">
+              <h3>Weekly Goal Completion</h3>
+              <div class="chart-period-selector" data-chart="goalChart">
+                <button class="period-btn active" data-period="week">Week</button>
+                <button class="period-btn" data-period="month">Month</button>
+                <button class="period-btn" data-period="day">Day</button>
+              </div>
+            </div>
+            <canvas id="goalChart"></canvas>
+          </div>
+           
+          <div class="chart-card">
+            <div class="chart-header-with-controls">
+              <h3>Vocabulary Progress</h3>
+              <div class="chart-period-selector" data-chart="vocabChart">
+                <button class="period-btn active" data-period="week">Week</button>
+                <button class="period-btn" data-period="month">Month</button>
+                <button class="period-btn" data-period="day">Day</button>
+              </div>
+            </div>
+            <canvas id="vocabChart"></canvas>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header-with-controls">
+              <h3>Practice Distribution</h3>
+              <div class="chart-period-selector" data-chart="practiceChart">
+                <button class="period-btn active" data-period="week">Week</button>
+                <button class="period-btn" data-period="month">Month</button>
+                <button class="period-btn" data-period="day">Day</button>
+              </div>
+            </div>
+            <canvas id="practiceChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Vocabulary Section -->
+      <section id="vocabulary" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-book-open"></i> Vocabulary Bank</h1>
+          <div class="header-actions">
+            <button id="generateWordsBtn" class="action-btn">
+              <i class="fas fa-magic"></i> Сгенерировать (Gemini)
+            </button>
+            <button id="addWordBtn" class="action-btn">
+              <i class="fas fa-plus"></i> Add Word
+            </button>
+          </div>
+        </div>
+
+
+        <div class="search-filter">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="vocabSearch" placeholder="Search words...">
+          </div>
+          <select id="vocabFilter" class="select2">
+            <option value="all">All Words</option>
+            <option value="new">New</option>
+            <option value="learning">Learning</option>
+            <option value="mastered">Mastered</option>
+          </select>
+          <select id="vocabPartOfSpeech" class="select2">
+            <option value="all">All Parts</option>
+            <option value="noun">Noun</option>
+            <option value="verb">Verb</option>
+            <option value="adjective">Adjective</option>
+            <option value="adverb">Adverb</option>
+            <option value="expression">Expression</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <table id="vocabularyTable">
+            <thead>
+              <tr>
+                <th data-sort="word">Word</th>
+                <th data-sort="translation">Translation</th>
+                <th data-sort="partOfSpeech">Part of Speech</th>
+                <th data-sort="dateAdded">Date Added</th>
+                <th data-sort="mastery">Mastery Level</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="vocabularyList">
+              <!-- Words will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Practice Calendar Section -->
+      <section id="practice" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-calendar-check"></i> Practice Calendar</h1>
+          <div class="header-actions">
+             <button id="generateSessionsBtn" class="action-btn">
+              <i class="fas fa-robot"></i> Generate Sessions
+            </button>
+            <button id="addPracticeBtn" class="action-btn">
+              <i class="fas fa-plus"></i> Add Session
+            </button>
+          </div>
+        </div>
+
+        <div class="calendar-container">
+          <div class="calendar-header">
+            <button id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+            <h3 id="currentMonth"></h3>
+            <button id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <div class="calendar-grid" id="calendarGrid">
+            <!-- Calendar will be generated here -->
+          </div>
+        </div>
+
+        <div id="focus-tasks-container">
+          <h3><i class="fas fa-crosshairs"></i> Focus Tasks</h3>
+          <div class="task-groups">
+            <div class="task-group" id="day-tasks">
+              <h4><i class="fas fa-sun"></i> Day (07:00 - 17:59)</h4>
+              <ul class="tasks-list"></ul>
+            </div>
+            <div class="task-group" id="evening-tasks">
+              <h4><i class="fas fa-moon"></i> Evening (18:00 - 06:59)</h4>
+              <ul class="tasks-list"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="practice-sessions">
+          <h3><i class="fas fa-list-check"></i> Scheduled Sessions</h3>
+          <div class="sessions-table-container">
+            <table id="sessionsTable">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Activity</th>
+                  <th>Completed</th>
+                  <th>On Time</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="sessionsList">
+                <!-- Sessions will be inserted here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Creative Notes Section -->
+      <section id="notes" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-sticky-note"></i> Creative Notes</h1>
+          <div class="header-actions">
+            <button id="addNoteBtn" class="action-btn">
+              <i class="fas fa-plus"></i> Add Note
+            </button>
+          </div>
+        </div>
+
+        <div class="notes-grid" id="notesGrid">
+          <!-- Notes will be inserted here in creative boxes -->
+        </div>
+      </section>
+
+      <!-- Grammar Practice Section -->
+      <section id="grammar" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-spell-check"></i> Grammar Practice</h1>
+          <div class="header-actions">
+             <button id="addGrammarTopicBtn" class="action-btn">
+              <i class="fas fa-plus"></i> Add Topic
+            </button>
+          </div>
+        </div>
+
+        <div class="grammar-controls">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="grammarSearch" placeholder="Search grammar topics...">
+          </div>
+          <select id="grammarLevel" class="select2">
+            <option value="all">All Levels</option>
+            <option value="beginner">Beginner (A1-A2)</option>
+            <option value="intermediate">Intermediate (B1-B2)</option>
+            <option value="advanced">Advanced (C1-C2)</option>
+          </select>
+          <select id="grammarCategory" class="select2">
+            <option value="all">All Categories</option>
+            <option value="tenses">Tenses</option>
+            <option value="articles">Articles</option>
+            <option value="prepositions">Prepositions</option>
+            <option value="conditionals">Conditionals</option>
+            <option value="modals">Modal Verbs</option>
+             <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="grammar-container">
+          <div class="grammar-content-area" id="grammarContentArea">
+            <div class="empty-state">
+              <i class="fas fa-book-reader"></i>
+              <p>Select a topic to start your grammar lesson.</p>
+            </div>
+            <!-- AI Lesson and Test will be rendered here -->
+          </div>
+
+          <div class="grammar-sidebar">
+            <div class="sidebar-handle"></div>
+            <div class="grammar-topics-list" id="grammarTopicsList">
+              <!-- Topic list will be generated by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- AI Tools Section -->
+      <section id="ai-tools" class="section">
+        <div class="section-header">
+          <h1><i class="fas fa-robot"></i> AI Tools</h1>
+           <div class="header-actions">
+            <button id="generatePlanBtnAITools" class="action-btn">
+              <i class="fas fa-robot"></i> Generate Plan
+            </button>
+          </div>
+        </div>
+
+        <div class="ai-tools-container">
+          <div class="ai-tool-card">
+            <div class="ai-tool-header">
+              <i class="fas fa-chart-line"></i>
+              <h3>Learning Analytics</h3>
+            </div>
+            <div class="ai-tool-content">
+              <p>Get AI-powered insights about your learning patterns and recommendations.</p>
+              <button id="analyzeProgressBtn" class="primary-btn">
+                <i class="fas fa-magic"></i> Analyze My Progress
+              </button>
+            </div>
+          </div>
+
+          <div class="ai-tool-card">
+            <div class="ai-tool-header">
+              <i class="fas fa-comment-dots"></i>
+              <h3>Conversation Practice</h3>
+            </div>
+            <div class="ai-tool-content">
+              <p>Practice English conversation with an AI partner on various topics.</p>
+              <button id="startConversationBtn" class="primary-btn">
+                <i class="fas fa-microphone"></i> Start Conversation
+              </button>
+            </div>
+          </div>
+
+          <div class="ai-tool-card">
+            <div class="ai-tool-header">
+              <i class="fas fa-spell-check"></i>
+              <h3>Writing Assistant</h3>
+            </div>
+            <div class="ai-tool-content">
+              <p>Get your writing checked and improved by AI with detailed explanations.</p>
+              <textarea id="writingInput" placeholder="Enter your text here..."></textarea>
+              <button id="checkWritingBtn" class="primary-btn">
+                <i class="fas fa-check-circle"></i> Check My Writing
+              </button>
+            </div>
+          </div>
+
+          <div class="ai-tool-card">
+            <div class="ai-tool-header">
+              <i class="fas fa-lightbulb"></i>
+              <h3>Personalized Tips</h3>
+            </div>
+            <div class="ai-tool-content">
+              <p>Get personalized learning tips based on your progress and goals.</p>
+              <button id="getTipsBtn" class="primary-btn">
+                <i class="fas fa-bolt"></i> Get Tips
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- Settings Section -->
+      <section id="settings" class="section">
+        <h1><i class="fas fa-cog"></i> Settings</h1>
+        
+        <div class="settings-container">
+          <div class="settings-card">
+            <h3><i class="fas fa-palette"></i> Appearance</h3>
+            <div class="settings-option">
+              <label class="switch">
+                <input type="checkbox" id="themeToggleSettings">
+                <span class="slider round"></span>
+              </label>
+              <span>Dark Mode</span>
+            </div>
+            <div class="settings-option">
+              <label for="appTheme">App Theme:</label>
+              <select id="appTheme" class="select2">
+                <option value="old">Old</option>
+                <option value="minimalism">Minimalism</option>
+              </select>
+            </div>
+            <div class="settings-option">
+              <label for="accentColor">Accent Color:</label>
+              <input type="color" id="accentColor" value="#4285f4">
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3><i class="fas fa-bell"></i> Notifications</h3>
+            <div class="settings-option">
+              <label class="switch">
+                <input type="checkbox" id="notificationsToggle">
+                <span class="slider round"></span>
+              </label>
+              <span>Enable Notifications</span>
+            </div>
+            <div class="settings-option">
+              <label for="reminderTime">Daily Reminder:</label>
+              <input type="time" id="reminderTime" value="19:00">
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3><i class="fas fa-bullseye"></i> Goals</h3>
+            <div class="settings-option">
+              <label for="dailyWordsGoal">Daily Words:</label>
+              <input type="number" id="dailyWordsGoal" min="1" value="5">
+            </div>
+            <div class="settings-option">
+              <label for="dailyPracticeGoal">Daily Practice (min):</label>
+              <input type="number" id="dailyPracticeGoal" min="1" value="30">
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3><i class="fas fa-database"></i> Data Management</h3>
+            <div class="settings-actions">
+              <button id="exportBtn" class="settings-btn">
+                <i class="fas fa-file-export"></i> Export Data
+              </button>
+              <button id="importBtn" class="settings-btn">
+                <i class="fas fa-file-import"></i> Import Data
+              </button>
+              <input type="file" id="importInput" accept=".json" style="display: none;">
+              <button id="resetBtn" class="settings-btn danger">
+                <i class="fas fa-trash-alt"></i> Reset Data
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3><i class="fas fa-user-graduate"></i> Learning Profile</h3>
+            <div class="settings-option">
+              <label for="defaultCurrentLevel">Default Current Level:</label>
+              <select id="defaultCurrentLevel" class="select2">
+                <option value="A1">Beginner (A1)</option>
+                <option value="A2">Elementary (A2)</option>
+                <option value="B1" selected>Intermediate (B1)</option>
+                <option value="B2">Upper-Intermediate (B2)</option>
+                <option value="C1">Advanced (C1)</option>
+                <option value="C2">Proficiency (C2)</option>
+              </select>
+            </div>
+            <div class="settings-option">
+              <label for="defaultTargetLevel">Default Target Level:</label>
+              <select id="defaultTargetLevel" class="select2">
+                <option value="A2">Elementary (A2)</option>
+                <option value="B1">Intermediate (B1)</option>
+                <option value="B2" selected>Upper-Intermediate (B2)</option>
+                <option value="C1">Advanced (C1)</option>
+                <option value="C2">Proficiency (C2)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3><i class="fas fa-robot"></i> AI Settings</h3>
+            <div class="settings-option">
+              <label for="aiAssistanceLevel">AI Assistance Level:</label>
+              <select id="aiAssistanceLevel" class="select2">
+                <option value="minimal">Minimal</option>
+                <option value="balanced" selected>Balanced</option>
+                <option value="full">Full Assistance</option>
+              </select>
+            </div>
+            <div class="settings-option">
+              <label for="aiFeedbackDetail">Feedback Detail:</label>
+              <select id="aiFeedbackDetail" class="select2">
+                <option value="concise">Concise</option>
+                <option value="detailed" selected>Detailed</option>
+                <option value="extensive">Extensive</option>
+              </select>
+            </div>
+            <div class="settings-option">
+              <label>Language:</label>
+              <div id="languageSelection" class="radio-group">
+                <label>
+                  <input type="radio" name="language" value="en"> English
+                </label>
+                <label>
+                  <input type="radio" name="language" value="ru"> Русский
+                </label>
+                <label>
+                  <input type="radio" name="language" value="tg"> Точики
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+    </main>
+  </div>
+
+  <!-- Модальные окна -->
+  <div class="modal" id="wordModal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2><i class="fas fa-book-open"></i> <span id="wordModalTitle">Add New Word</span></h2>
+      <form id="wordForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="word">Word:</label>
+            <input type="text" id="word" required>
+          </div>
+          <div class="form-group">
+            <label for="translation">Translation:</label>
+            <input type="text" id="translation" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="partOfSpeech">Part of Speech:</label>
+            <select id="partOfSpeech" required>
+              <option value="noun">Noun</option>
+              <option value="verb">Verb</option>
+              <option value="adjective">Adjective</option>
+              <option value="adverb">Adverb</option>
+              <option value="expression">Expression</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="mastery">Mastery Level:</label>
+            <select id="mastery" required>
+              <option value="new">New</option>
+              <option value="learning">Learning</option>
+              <option value="mastered">Mastered</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="example">Example Sentence:</label>
+          <textarea id="example" rows="3"></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Save Word</button>
+          <button type="button" class="secondary-btn close-modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Модальное окно для изменения статуса слова -->
+  <div class="modal" id="editWordStatusModal">
+    <div class="modal-content small">
+      <span class="close">&times;</span>
+      <h2><i class="fas fa-edit"></i> Изменить статус слова</h2>
+      <form id="editWordStatusForm">
+        <input type="hidden" id="editWordId">
+        <div class="form-group">
+          <label for="editWordMastery">Уровень владения:</label>
+          <select id="editWordMastery" required>
+            <option value="new">New</option>
+            <option value="learning">Learning</option>
+            <option value="mastered">Mastered</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Сохранить</button>
+          <button type="button" class="secondary-btn close-modal">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="practiceModal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2><i class="fas fa-calendar-plus"></i> <span id="practiceModalTitle">Add Practice Session</span></h2>
+      <form id="practiceForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="practiceDate">Date:</label>
+            <input type="date" id="practiceDate" required>
+          </div>
+          <div class="form-group">
+            <label for="practiceTime">Time:</label>
+            <input type="time" id="practiceTime" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="activityType">Activity Type:</label>
+          <select id="activityType" required>
+            <option value="listening">Listening</option>
+            <option value="speaking">Speaking</option>
+            <option value="reading">Reading</option>
+            <option value="writing">Writing</option>
+            <option value="grammar">Grammar</option>
+            <option value="other">Other (specify)</option>
+          </select>
+          <input type="text" id="customActivity" style="display: none; margin-top: 8px;" placeholder="Enter activity name">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="duration">Duration (minutes):</label>
+            <input type="number" id="duration" min="1" required>
+          </div>
+          <div class="form-group">
+            <label for="reminder">Set Reminder:</label>
+            <select id="reminder">
+              <option value="none">None</option>
+              <option value="15">15 minutes before</option>
+              <option value="30">30 minutes before</option>
+              <option value="60">1 hour before</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="practiceNotes">Notes:</label>
+          <textarea id="practiceNotes" rows="3"></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Save Session</button>
+          <button type="button" class="secondary-btn close-modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="noteModal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2><i class="fas fa-edit"></i> <span id="noteModalTitle">Create New Note</span></h2>
+      <form id="noteForm">
+        <div class="form-group">
+          <label for="noteTitle">Title:</label>
+          <input type="text" id="noteTitle" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="noteContent">Content:</label>
+          <textarea id="noteContent" rows="8" required></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Save Note</button>
+          <button type="button" class="secondary-btn close-modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="noteViewModal">
+    <div class="modal-content large">
+      <span class="close">&times;</span>
+      <h2 id="noteViewTitle"></h2>
+      <div class="note-view-content" id="noteViewContent"></div>
+      <div class="note-view-actions">
+        <button id="editNoteBtn" class="primary-btn"><i class="fas fa-edit"></i> Edit</button>
+        <button id="deleteNoteBtn" class="danger-btn"><i class="fas fa-trash-alt"></i> Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="confirmModal">
+    <div class="modal-content small">
+      <h3 id="confirmTitle">Are you sure?</h3>
+      <p id="confirmMessage">This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button id="confirmCancel" class="secondary-btn">Cancel</button>
+        <button id="confirmAction" class="danger-btn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conversation Modal -->
+  <div class="modal" id="conversationModal">
+    <div class="modal-content large">
+      <span class="close">&times;</span>
+      <h2><i class="fas fa-comments"></i> AI Conversation Practice</h2>
+      <div class="conversation-container" id="conversationContainer">
+        <div class="conversation-messages" id="conversationMessages">
+          <div class="ai-message">
+            <div class="message-avatar">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-content">
+              <div class="message-text">Hello! I'm your English practice partner. What would you like to talk about today?</div>
+              <div class="message-time">Just now</div>
+            </div>
+          </div>
+        </div>
+        <div class="conversation-input">
+          <input type="text" id="conversationInput" placeholder="Type your message...">
+          <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+      <div class="conversation-actions">
+        <select id="conversationTopic" class="select2">
+          <option value="travel">Travel</option>
+          <option value="food">Food</option>
+          <option value="work">Work</option>
+          <option value="hobbies">Hobbies</option>
+          <option value="custom">Custom Topic</option>
+        </select>
+        <button id="restartConversationBtn" class="secondary-btn">
+          <i class="fas fa-sync-alt"></i> Restart
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Подключаем библиотеки -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3.0.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  
+  <!-- Наш основной скрипт -->
+  <script src="config.js"></script>
+  <script src="prompts.js"></script>
+  <script src="script.js?v=2.0"></script>
+
+  <!-- Модальное окно для генерации плана -->
+<div class="modal" id="planModal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2><i class="fas fa-drafting-compass"></i> Generate Your Learning Plan</h2>
+    <form id="planForm">
+      <div class="form-group">
+        <label for="planDuration">Plan Duration:</label>
+        <select id="planDuration">
+          <option value="day">Day</option>
+          <option value="week" selected>Week</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="dailyRepetitions">Daily Repetitions:</label>
+        <input type="number" id="dailyRepetitions" value="1" min="1" max="10">
+      </div>
+      <div class="form-group">
+        <label for="currentLevel">Your Current Level (optional):</label>
+        <select id="currentLevel">
+          <option value="">None</option>
+          <option value="A1">Beginner (A1)</option>
+          <option value="A2">Elementary (A2)</option>
+          <option value="B1" selected>Intermediate (B1)</option>
+          <option value="B2">Upper-Intermediate (B2)</option>
+          <option value="C1">Advanced (C1)</option>
+          <option value="C2">Proficiency (C2)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="targetLevel">Your Target Level:</label>
+        <select id="targetLevel">
+          <option value="">None</option>
+          <option value="A2">Elementary (A2)</option>
+          <option value="B1">Intermediate (B1)</option>
+          <option value="B2" selected>Upper-Intermediate (B2)</option>
+          <option value="C1">Advanced (C1)</option>
+          <option value="C2">Proficiency (C2)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="primaryGoal">Primary Goal:</label>
+        <input type="text" id="primaryGoal" value="Improve business communication" required>
+      </div>
+       <div class="form-group" id="timePerWeekGroup">
+        <label for="timePerWeek">Hours per week you can study:</label>
+        <input type="number" id="timePerWeek" value="5" min="1" max="40">
+      </div>
+      <div class="form-group" id="dayTimeGroup" style="display: none;">
+        <label>What time can you study?:</label>
+        <div id="dayTimeInputs" class="time-inputs-container">
+          <input type="time" class="day-time-input" value="10:00">
+          <button type="button" class="add-time-slot-btn"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="customSections">Custom Sections (optional, comma-separated):</label>
+        <textarea id="customSections" rows="2" placeholder="e.g., Business Meetings, Technical Writing"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="primary-btn">Generate Plan</button>
+        <button type="button" class="secondary-btn close-modal">Cancel</button>
+      </div>
+    </form>
+    <div class="loader-container" style="display: none;">
+      <div class="loader"></div>
+      <p>Generating your personalized plan...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно для генерации занятий -->
+<div class="modal" id="generateSessionsModal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2><i class="fas fa-robot"></i> Generate Practice Sessions</h2>
+    <form id="generateSessionsForm">
+      <div class="form-group">
+        <label for="sessionDate">Date or Week:</label>
+        <input type="date" id="sessionDate" required>
+      </div>
+      <div class="form-group">
+        <label for="sessionFocus">Focus (from Skill Tree):</label>
+        <select id="sessionFocus" multiple="multiple" class="select2" style="width: 100%;" required>
+          <!-- Опции будут добавлены динамически -->
+        </select>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="primary-btn">Generate</button>
+        <button type="button" class="secondary-btn close-modal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  <!-- Модальное окно для генерации слов с помощью Gemini -->
+  <div class="modal" id="gemini-generate-modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2><i class="fas fa-magic"></i> Сгенерировать слова с помощью Gemini</h2>
+      <form id="gemini-generate-form">
+        <div class="form-group">
+          <label for="gemini-topic">Тема:</label>
+          <input type="text" id="gemini-topic" placeholder="Например, 'бизнес-английский'" required>
+        </div>
+        <div class="form-group">
+          <label for="gemini-count">Количество слов:</label>
+          <input type="number" id="gemini-count" min="1" max="50" value="10" required>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Сгенерировать</button>
+          <button type="button" class="secondary-btn close-modal">Отмена</button>
+        </div>
+      </form>
+      <div id="gemini-loading" style="display: none; text-align: center; margin-top: 15px;">
+          <p><i class="fas fa-spinner fa-spin"></i> Идет генерация слов...</p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal" id="grammarTopicModal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2><i class="fas fa-spell-check"></i> <span id="grammarModalTitle">Add Grammar Topic</span></h2>
+      <form id="grammarTopicForm">
+        <div class="form-group">
+          <label for="grammarTopicTitle">Topic Title:</label>
+          <input type="text" id="grammarTopicTitle" required>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="grammarTopicCategory">Category:</label>
+            <select id="grammarTopicCategory" required>
+              <option value="tenses">Tenses</option>
+              <option value="articles">Articles</option>
+              <option value="prepositions">Prepositions</option>
+              <option value="conditionals">Conditionals</option>
+              <option value="modals">Modal Verbs</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="grammarTopicLevel">Level:</label>
+            <select id="grammarTopicLevel" required>
+              <option value="beginner">Beginner (A1-A2)</option>
+              <option value="intermediate">Intermediate (B1-B2)</option>
+              <option value="advanced">Advanced (C1-C2)</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="grammarTopicStatus">Status:</label>
+          <select id="grammarTopicStatus" required>
+            <option value="new">New</option>
+            <option value="learning">Learning</option>
+            <option value="mastered">Mastered</option>
+          </select>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Save Topic</button>
+          <button type="button" class="secondary-btn close-modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Модальное окно для настройки генерации теста по грамматике -->
+  <div class="modal" id="grammarTestConfigModal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2><i class="fas fa-cogs"></i> Настроить тест по грамматике</h2>
+      <form id="grammarTestConfigForm">
+        <input type="hidden" id="testConfigTopicId">
+        <div class="form-group">
+          <label for="testQuestionCount">Количество вопросов:</label>
+          <input type="number" id="testQuestionCount" min="5" max="20" value="10" required>
+        </div>
+        <div class="form-group">
+          <label for="testQuestionTypes">Типы вопросов:</label>
+          <select id="testQuestionTypes" multiple="multiple" class="select2" style="width: 100%;" required>
+            <option value="multiple-choice" selected>Множественный выбор</option>
+            <option value="fill-in-the-blank">Заполнение пропусков</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="testDifficulty">Уровень сложности:</label>
+          <select id="testDifficulty" required>
+            <option value="beginner">Начинающий (A1-A2)</option>
+            <option value="intermediate" selected>Средний (B1-B2)</option>
+            <option value="advanced">Продвинутый (C1-C2)</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="primary-btn">Сгенерировать тест</button>
+          <button type="button" class="secondary-btn close-modal">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
